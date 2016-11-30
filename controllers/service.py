@@ -2,7 +2,6 @@
 
 import random
 from flask import current_app, request
-from backend_common.exceptions import LackOfFieldError
 import backend_common.services.sms
 from base import BaseController
 import backend_common.constants.http_code as http_code
