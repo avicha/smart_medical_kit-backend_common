@@ -15,7 +15,8 @@
 1|男
 2|女
 
-#### 注册类型register_type
+### 订单orders
+#### 购买渠道purchase_channel
 
 值|意义
 ----|----

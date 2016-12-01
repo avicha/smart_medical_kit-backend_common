@@ -12,7 +12,13 @@ class User(BaseModel):
     phone_number = CharField(max_length=12, unique=True)
     nick = CharField(max_length=12, null=True)
     avatar = CharField(max_length=512, null=True)
-    register_type = IntegerField(default=1)
+    province_code = IntegerField(null=True)
+    province = CharField(max_length=20, null=True)
+    city_code = IntegerField(null=True)
+    city = CharField(max_length=20, null=True)
+    region_code = IntegerField(null=True)
+    region = CharField(max_length=20, null=True)
+    street = CharField(max_length=120, null=True)
     code = '002'
 
     @classmethod
