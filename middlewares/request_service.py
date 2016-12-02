@@ -1,13 +1,16 @@
 # coding=utf-8
 from flask import request, current_app
+from backend_common.services.utils import dict_utils
 
 
-def get_request_params(f):
-    def decorator(*args, **kwargs):
-        data = request.json or request.form or request.args
-        kwargs.update({'data': data})
-        return f(*args, **kwargs)
-    return decorator
+def get_request_params(*fields, **opts):
+    def _get_request_params(f):
+        def decorator(*args, **kwargs):
+            data = request.json or request.form or request.args
+            kwargs.update({'data': dict_utils.pick(data, *fields, **opts)})
+            return f(*args, **kwargs)
+        return decorator
+    return _get_request_params
 
 
 def load_admin(f):
