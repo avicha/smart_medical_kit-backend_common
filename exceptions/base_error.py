@@ -12,5 +12,6 @@ class BaseError(Exception):
 
     def handle(self):
         import sys
-        current_app.log_exception(sys.exc_info())
+        if not current_app.testing:
+            current_app.log_exception(sys.exc_info())
         return jsonify({'errcode': self.errcode, 'errmsg': self.errmsg})

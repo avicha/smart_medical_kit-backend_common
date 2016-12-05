@@ -8,11 +8,11 @@ import backend_common.constants.http_code as http_code
 class User(BaseModel):
     username = CharField(max_length=40, unique=True)
     password = CharField(max_length=256, null=True)
-    sex = IntegerField(default=0)
+    sex = IntegerField(constraints=[SQL('DEFAULT 0')])
     phone_number = CharField(max_length=12, unique=True)
     nick = CharField(max_length=12, null=True)
     avatar = CharField(max_length=512, null=True)
-    register_type = IntegerField(default=0)
+    register_type = IntegerField(constraints=[SQL('DEFAULT 0')])
 
     code = '002'
 
