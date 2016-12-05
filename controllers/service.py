@@ -11,7 +11,7 @@ from backend_common.middlewares.request_service import get_request_params
 class ServiceController(BaseController):
 
     @classmethod
-    @get_request_params
+    @get_request_params()
     def send_verifycode(cls, data):
         phone_number = data.get('phone_number')
         if not phone_number:

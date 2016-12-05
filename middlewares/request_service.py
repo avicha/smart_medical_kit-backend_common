@@ -7,7 +7,10 @@ def get_request_params(*fields, **opts):
     def _get_request_params(f):
         def decorator(*args, **kwargs):
             data = request.json or request.form or request.args
-            kwargs.update({'data': dict_utils.pick(data, *fields, **opts)})
+            if fields:
+                kwargs.update({'data': dict_utils.pick(data, *fields, **opts)})
+            else:
+                kwargs.update({'data': data})
             return f(*args, **kwargs)
         return decorator
     return _get_request_params
