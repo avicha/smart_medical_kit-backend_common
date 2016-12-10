@@ -7,7 +7,7 @@ class UserAddress(BaseModel):
     user_id = IntegerField()
     region_code = IntegerField()
     street = CharField(max_length=512)
-    is_default = BooleanField(constraints=[SQL('DEFAULT 0')])
+    is_default = BooleanField(default=False)
     consignee = CharField(max_length=20)
     contact = CharField(max_length=20)
     code = '005'

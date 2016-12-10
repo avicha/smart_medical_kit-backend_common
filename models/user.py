@@ -3,16 +3,18 @@ from base_model import BaseModel
 from peewee import *
 from backend_common.exceptions import BaseError
 import backend_common.constants.http_code as http_code
+import backend_common.constants.sex as sex
+import backend_common.constants.register_type as register_type
 
 
 class User(BaseModel):
     username = CharField(max_length=40, unique=True)
     password = CharField(max_length=256, null=True)
-    sex = IntegerField(constraints=[SQL('DEFAULT 0')])
+    sex = IntegerField(default=sex.UNKNOWN)
     phone_number = CharField(max_length=12, unique=True)
     nick = CharField(max_length=12, null=True)
     avatar = CharField(max_length=512, null=True)
-    register_type = IntegerField(constraints=[SQL('DEFAULT 0')])
+    register_type = IntegerField(default=register_type.SYSTEM)
 
     code = '002'
 

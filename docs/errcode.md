@@ -5,6 +5,8 @@
 admins|001|管理员
 users|002|用户
 user_tokens|003|用户令牌
+addresses|004|地址
+user_addresses|005|用户地址
 
 #### 错误码
 错误码由HTTP状态码+数据表编号组成，代表哪个表出现什么类型错误，常见HTTP错误码如下：

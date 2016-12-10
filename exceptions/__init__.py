@@ -6,8 +6,7 @@ def uncaught_error_handler(e):
     import sys
     import backend_common.constants.http_code as http_code
     from flask import jsonify, current_app
-    if not current_app.testing:
-        current_app.log_exception(sys.exc_info())
+    current_app.log_exception(sys.exc_info())
     return jsonify({'errcode': http_code.INTERNAL_SERVER_ERROR, 'errmsg': e.__class__.__name__})
 
 
