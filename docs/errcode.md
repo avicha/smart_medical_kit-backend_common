@@ -11,6 +11,7 @@ products|006|产品
 skus|007|最小库存管理单元
 orders|008|订单
 order_skus|009|订单购买的sku
+product_instances|010|产品实例
 
 #### 错误码
 错误码由HTTP状态码+数据表编号组成，代表哪个表出现什么类型错误，常见HTTP错误码如下：

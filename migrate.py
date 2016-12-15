@@ -11,6 +11,7 @@ import backend_common.database.product_table as ProductModel
 import backend_common.database.sku_table as SkuModel
 import backend_common.database.order_table as OrderModel
 import backend_common.database.order_sku_table as OrderSkuModel
+import backend_common.database.product_instance_table as ProductInstanceModel
 
 with database.transaction():
     AdminModel.migrate()
@@ -22,3 +23,4 @@ with database.transaction():
     SkuModel.migrate()
     OrderModel.migrate()
     OrderSkuModel.migrate()
+    ProductInstanceModel.migrate()
