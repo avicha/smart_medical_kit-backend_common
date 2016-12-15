@@ -1,0 +1,8 @@
+# coding=utf-8
+CREATED = 1
+PAID = 2
+CANCELED = 3
+CLOSED = 4
+SHIPPED = 5
+RECEIPT = 6
+COMPLETED = 7

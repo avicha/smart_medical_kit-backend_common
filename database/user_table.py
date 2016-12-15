@@ -10,5 +10,4 @@ def migrate():
     import backend_common.constants.sex as sex
     import backend_common.constants.register_type as register_type
     password = bcrypt.hashpw(u'123456'.encode('utf-8'), bcrypt.gensalt())
-    q = User.insert(username=u'13632324433', password=password, nick=u'avicha', sex=sex.MAN, phone_number=u'13632324433', register_type=register_type.SYSTEM)
-    q.execute()
+    User.insert(username=u'13632324433', password=password, nick=u'avicha', sex=sex.MAN, phone_number=u'13632324433', register_type=register_type.SYSTEM).execute()
