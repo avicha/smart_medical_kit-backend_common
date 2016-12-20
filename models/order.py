@@ -11,7 +11,7 @@ class Order(BaseModel):
     remark = CharField()
     total_price = DecimalField(decimal_places=2)
     paid_price = DecimalField(decimal_places=2)
-    paid_time = DateTimeField(default=datetime.now, formats='%Y-%m-%d %H:%M:%S')
+    paid_time = DateTimeField(default=datetime.now, formats='%Y-%m-%d %H:%M:%S', null=True)
     code = '008'
 
     class Meta:

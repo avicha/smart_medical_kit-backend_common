@@ -4,9 +4,9 @@ from peewee import *
 
 
 class ProductInstance(BaseModel):
+    product_code = CharField(max_length=15, primary_key=True)
     sku_id = IntegerField()
-    product_code = CharField()
-    order_id = IntegerField()
+    order_id = IntegerField(null=True)
     code = '010'
 
     class Meta:

@@ -8,11 +8,11 @@ class Sku(BaseModel):
     sku_code = IntegerField()
     market_price = DecimalField(decimal_places=2)
     sales_price = DecimalField(decimal_places=2)
-    image = CharField()
-    props = CharField()
-    stock_count = IntegerField()
-    sales_count = IntegerField()
-    comment_count = IntegerField()
+    image = CharField(null=True)
+    props = CharField(default='')
+    stock_count = IntegerField(default=0)
+    sales_count = IntegerField(default=0)
+    comment_count = IntegerField(default=0)
     code = '007'
 
     class Meta:

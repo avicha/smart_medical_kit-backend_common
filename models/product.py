@@ -5,10 +5,10 @@ from peewee import *
 
 class Product(BaseModel):
     name = CharField(max_length=256)
-    description = CharField(max_length=256)
-    images = CharField()
-    intro = TextField()
-    props = CharField()
+    description = CharField(max_length=256, null=True)
+    images = CharField(default='')
+    intro = TextField(null=True)
+    props = CharField(default='')
     code = '006'
 
     class Meta:
