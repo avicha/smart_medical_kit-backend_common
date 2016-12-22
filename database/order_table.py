@@ -9,6 +9,6 @@ def migrate():
     if Order.table_exists():
         Order.drop_table()
     Order.create_table()
-    user = User.get(User.username == '13632324433')
+    user = User.get(User.phone_number == '13632324433')
     user_address = UserAddress.get(UserAddress.user_id == user.id, UserAddress.is_default == True)
     Order.create(user_id=user.id, logistics_user_address_id=user_address.id, status=order_status.COMPLETED, remark='这是测试的订单', total_price=597, paid_price=577)

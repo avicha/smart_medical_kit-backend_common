@@ -15,7 +15,7 @@ class ServiceController(BaseController):
     def send_verifycode(cls, data):
         phone_number = data.get('phone_number')
         if not phone_number:
-            return cls.error_with_message(http_code.FORBIDDEN, u'请传递手机号码')
+            return cls.error_with_message(http_code.BAD_REQUEST, u'请传递手机号码')
         else:
             phone_number = phone_number.encode('utf-8')
             old_verifycode = current_app.cache.get('verifycode:' + phone_number)

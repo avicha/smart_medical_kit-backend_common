@@ -11,7 +11,10 @@ import backend_common.database.product_table as ProductModel
 import backend_common.database.sku_table as SkuModel
 import backend_common.database.order_table as OrderModel
 import backend_common.database.order_sku_table as OrderSkuModel
-import backend_common.database.product_instance_table as ProductInstanceModel
+import backend_common.database.medical_kit_table as MedicalKitModel
+import backend_common.database.medical_kit_instance_table as MedicalKitInstanceModel
+import backend_common.database.medical_kit_instance_setting_table as MedicalKitInstanceSettingModel
+import backend_common.database.medical_kit_instance_box_setting_table as MedicalKitInstanceBoxSettingModel
 
 with database.transaction():
     AdminModel.migrate()
@@ -23,4 +26,7 @@ with database.transaction():
     SkuModel.migrate()
     OrderModel.migrate()
     OrderSkuModel.migrate()
-    ProductInstanceModel.migrate()
+    MedicalKitModel.migrate()
+    MedicalKitInstanceModel.migrate()
+    MedicalKitInstanceSettingModel.migrate()
+    MedicalKitInstanceBoxSettingModel.migrate()

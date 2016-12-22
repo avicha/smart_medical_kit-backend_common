@@ -8,14 +8,12 @@ import backend_common.constants.register_type as register_type
 
 
 class User(BaseModel):
-    username = CharField(max_length=40, unique=True)
+    phone_number = CharField(max_length=12, unique=True)
     password = CharField(max_length=256, null=True)
     sex = IntegerField(default=sex.UNKNOWN)
-    phone_number = CharField(max_length=12, unique=True)
     nick = CharField(max_length=12, null=True)
     avatar = CharField(max_length=512, null=True)
     register_type = IntegerField(default=register_type.SYSTEM)
-
     code = '002'
 
     @classmethod

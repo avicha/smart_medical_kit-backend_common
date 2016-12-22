@@ -2,5 +2,5 @@
 from base import BaseController
 
 
-class ProductInstanceController(BaseController):
+class MedicalKitInstanceController(BaseController):
     pass
