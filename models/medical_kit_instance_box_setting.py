@@ -8,7 +8,9 @@ class MedicalKitInstanceBoxSetting(BaseModel):
     box_index = IntegerField()
     medical_name = CharField()
     medical_barcode = IntegerField(null=True)
-    schedule = CharField()
+    schedule_times = CharField()
+    piece_per_time = IntegerField(default=1)
+    unit = CharField(default='粒')
     code = '013'
 
     class Meta:
