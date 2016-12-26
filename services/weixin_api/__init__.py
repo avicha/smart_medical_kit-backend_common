@@ -108,4 +108,4 @@ class WeixinAPI(object):
             }
             string = '&'.join(['%s=%s' % (key.lower(), params[key]) for key in sorted(params)])
             signature = hashlib.sha1(string).hexdigest()
-            return {'errcode': 0, 'result': {'appId': self.appid, 'timestamp': params['timestamp'], 'nonceStr': params['noncestr'], 'signature': signature, 'url': url}}
+            return {'errcode': 0, 'result': {'appId': self.appid, 'timestamp': params['timestamp'], 'nonceStr': params['noncestr'], 'signature': signature}}
