@@ -1,1 +1,1 @@
-import dict as dict_utils
+import dict_utils

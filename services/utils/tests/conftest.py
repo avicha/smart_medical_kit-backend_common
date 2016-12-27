@@ -2,9 +2,9 @@
 import sys
 sys.path.append('.')
 import pytest
-import dict
 
 
 @pytest.fixture(scope="session")
-def util():
-    return dict
+def dict_utils():
+    import dict_utils
+    return dict_utils
