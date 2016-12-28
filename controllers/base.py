@@ -10,6 +10,10 @@ class BaseController():
         return jsonify({'errcode': 0, 'result': result})
 
     @staticmethod
+    def success():
+        return jsonify({'errcode': 0})
+
+    @staticmethod
     def success_with_list_result(total_count, result):
         return jsonify({'errcode': 0, 'total_count': total_count, 'result': result})
 
