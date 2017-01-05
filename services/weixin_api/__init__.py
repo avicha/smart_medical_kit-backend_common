@@ -8,6 +8,22 @@ import string
 import hashlib
 
 
+class WeixinAPIError(Exception):
+
+    """docstring for WeixinAPIError"""
+
+    def __init__(self, errcode, errmsg):
+        self.errcode = errcode
+        self.errmsg = errmsg
+
+    def handle(self):
+        import sys
+        from flask import jsonify, current_app
+        if not current_app.testing:
+            current_app.log_exception(sys.exc_info())
+        return jsonify({'errcode': self.errcode, 'errmsg': self.errmsg})
+
+
 class WeixinAPI(object):
 
     def __init__(self, config):
@@ -30,64 +46,50 @@ class WeixinAPI(object):
         # 关闭连接
         conn.close()
         end = time.time()
-        current_app.logger.info('GET %s%s，耗时%sms', self.server_host, path, (end - start)*1000)
+        current_app.logger.info('GET %s%s，耗时%sms', self.server_host, url, (end - start)*1000)
         # HTTP正常返回
         if response.status == 200:
             ret = json.loads(data)
             errcode = ret.get('errcode')
-            # 如果是token过期导致请求数据失败，则重新获取token请求一次
+            errmsg = ret.get('errmsg')
             if errcode:
-                return ret
+                raise WeixinAPIError(errcode, errmsg)
             else:
-                return {'errcode': 0, 'result': ret}
+                return ret
         else:
             # HTTP请求错误
-            return {'errcode': response.status, 'errmsg': data}
+            raise WeixinAPIError(response.status, data)
 
     def get_access_token(self):
         from flask import current_app
         if current_app.cache and current_app.cache.get('weixin_api_%s_access_token' % self.appid):
             accesss_token = current_app.cache.get('weixin_api_%s_access_token' % self.appid)
-            return {'errcode': 0, 'result': accesss_token}
+            return accesss_token
         else:
-            resp = self.get('/cgi-bin/token', {'grant_type': 'client_credential', 'appid': self.appid, 'secret': self.secret})
-            if resp.get('errcode'):
-                return resp
-            else:
-                access_token = resp.get('result').get('access_token')
-                if current_app.cache:
-                    current_app.cache.set('weixin_api_%s_access_token' % self.appid, access_token, timeout=resp.get('result').get('expires_in'))
-                return {'errcode': 0, 'result': access_token}
+            result = self.get('/cgi-bin/token', {'grant_type': 'client_credential', 'appid': self.appid, 'secret': self.secret})
+            access_token = result.get('access_token')
+            if current_app.cache:
+                current_app.cache.set('weixin_api_%s_access_token' % self.appid, access_token, timeout=result.get('expires_in'))
+            return access_token
 
     def getcallbackip(self):
-        access_token_resp = self.get_access_token()
-        if access_token_resp.get('errcode'):
-            return access_token_resp
-        else:
-            access_token = access_token_resp.get('result')
-            payload = {'access_token': access_token}
-            return self.get('/cgi-bin/getcallbackip', payload)
+        access_token = self.get_access_token()
+        payload = {'access_token': access_token}
+        return self.get('/cgi-bin/getcallbackip', payload)
 
     def get_jsapi_ticket(self):
         from flask import current_app
         if current_app.cache and current_app.cache.get('weixin_api_%s_ticket' % self.appid):
             ticket = current_app.cache.get('weixin_api_%s_ticket' % self.appid)
-            return {'errcode': 0, 'result': ticket}
+            return ticket
         else:
-            access_token_resp = self.get_access_token()
-            if access_token_resp.get('errcode'):
-                return access_token_resp
-            else:
-                access_token = access_token_resp.get('result')
-                payload = {'access_token': access_token, 'type': 'jsapi'}
-                resp = self.get('/cgi-bin/ticket/getticket', payload)
-                if resp.get('errcode'):
-                    return resp
-                else:
-                    ticket = resp.get('result').get('ticket')
-                    if current_app.cache:
-                        current_app.cache.set('weixin_api_%s_ticket' % self.appid, ticket, timeout=resp.get('result').get('expires_in'))
-                    return {'errcode': 0, 'result': ticket}
+            access_token = self.get_access_token()
+            payload = {'access_token': access_token, 'type': 'jsapi'}
+            result = self.get('/cgi-bin/ticket/getticket', payload)
+            ticket = result.get('ticket')
+            if current_app.cache:
+                current_app.cache.set('weixin_api_%s_ticket' % self.appid, ticket, timeout=result.get('expires_in'))
+            return ticket
 
     def __create_nonce_str(self):
         return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
@@ -96,16 +98,13 @@ class WeixinAPI(object):
         return int(time.time())
 
     def get_jsapi_params(self, url):
-        jsapi_ticket_resp = self.get_jsapi_ticket()
-        if jsapi_ticket_resp.get('errcode'):
-            return jsapi_ticket_resp
-        else:
-            params = {
-                'noncestr': self.__create_nonce_str(),
-                'jsapi_ticket': jsapi_ticket_resp.get('result'),
-                'timestamp': self.__create_timestamp(),
-                'url': url
-            }
-            string = '&'.join(['%s=%s' % (key.lower(), params[key]) for key in sorted(params)])
-            signature = hashlib.sha1(string).hexdigest()
-            return {'errcode': 0, 'result': {'appId': self.appid, 'timestamp': params['timestamp'], 'nonceStr': params['noncestr'], 'signature': signature}}
+        jsapi_ticket = self.get_jsapi_ticket()
+        params = {
+            'noncestr': self.__create_nonce_str(),
+            'jsapi_ticket': jsapi_ticket,
+            'timestamp': self.__create_timestamp(),
+            'url': url
+        }
+        params_str = '&'.join(['%s=%s' % (key.lower(), params[key]) for key in sorted(params)])
+        signature = hashlib.sha1(params_str).hexdigest()
+        return {'appId': self.appid, 'timestamp': params['timestamp'], 'nonceStr': params['noncestr'], 'signature': signature}

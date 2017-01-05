@@ -6,12 +6,13 @@ from flask import current_app, request
 from base import BaseController
 from backend_common.middlewares.request_service import get_request_params
 import backend_common.constants.http_code as http_code
+
 from backend_common.services.sms import WelinkSMSService
 from backend_common.config import welink_sms as welink_sms_api_config
+welink_sms_api = WelinkSMSService(welink_sms_api_config)
+
 from backend_common.services.weixin_api import WeixinAPI
 from backend_common.config import weixin as weixin_api_config
-
-welink_sms_api = WelinkSMSService(welink_sms_api_config)
 weixin_api = WeixinAPI(weixin_api_config)
 
 
@@ -42,8 +43,5 @@ class ServiceController(BaseController):
     @get_request_params()
     def get_weixin_jsapi_params(cls, data):
         url = urlparse(request.headers.get('Referer')).geturl()
-        res = weixin_api.get_jsapi_params(url)
-        if res.get('errcode') == 0:
-            return cls.success_with_result(res.get('result'))
-        else:
-            return cls.error_with_message(res.get('errcode'), res.get('errmsg'))
+        result = weixin_api.get_jsapi_params(url)
+        return cls.success_with_result(result)

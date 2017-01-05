@@ -15,6 +15,7 @@ import backend_common.database.medical_kit_table as MedicalKitModel
 import backend_common.database.medical_kit_instance_table as MedicalKitInstanceModel
 import backend_common.database.medical_kit_instance_setting_table as MedicalKitInstanceSettingModel
 import backend_common.database.medical_kit_instance_box_setting_table as MedicalKitInstanceBoxSettingModel
+import backend_common.database.medical_table as MedicalModel
 
 with database.transaction():
     AdminModel.migrate()
@@ -30,3 +31,4 @@ with database.transaction():
     MedicalKitInstanceModel.migrate()
     MedicalKitInstanceSettingModel.migrate()
     MedicalKitInstanceBoxSettingModel.migrate()
+    MedicalModel.migrate()
