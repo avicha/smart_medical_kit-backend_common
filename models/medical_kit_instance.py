@@ -15,12 +15,25 @@ class MedicalKitInstance(BaseModel):
     def setting(self, fields=['id', 'prompt_sound']):
         from medical_kit_instance_setting import MedicalKitInstanceSetting as MedicalKitInstanceSettingModel
         setting = MedicalKitInstanceSettingModel.select().where(MedicalKitInstanceSettingModel.medical_kit_instance_id == self.id, MedicalKitInstanceSettingModel.deleted_at == None).first()
-        return setting.format(fields)
+        return setting.format(fields) if setting else None
 
-    def box_settings(setting, fields=['id', 'box_index', 'medical_name', 'medical_barcode', 'schedule_times', 'piece_per_time', 'unit']):
+    def box_settings(self, box_count, fields=['id', 'box_index', 'medical_name', 'medical_barcode', 'schedule_times', 'piece_per_time', 'unit']):
         from medical_kit_instance_box_setting import MedicalKitInstanceBoxSetting as MedicalKitInstanceBoxSettingModel
         q = MedicalKitInstanceBoxSettingModel.select().where(MedicalKitInstanceBoxSettingModel.medical_kit_instance_id == self.id, MedicalKitInstanceBoxSettingModel.deleted_at == None)
         settings = []
         for x in q:
             settings.append(x.format(fields))
-        return settings
+        result = []
+        for i in range(0, box_count):
+            if len(settings):
+                box_setting = next(setting for setting in settings if setting.get('box_index') == i+1)
+                if box_setting:
+                    box_setting.schedule_times = box_setting.schedule_times.split(',')
+                    result.append(box_setting)
+                else:
+                    medical_kit_instance_box_setting = MedicalKitInstanceBoxSettingModel(medical_kit_instance_id=self.id, box_index=i+1)
+                    result.append(medical_kit_instance_box_setting.format(fields))
+            else:
+                medical_kit_instance_box_setting = MedicalKitInstanceBoxSettingModel(medical_kit_instance_id=self.id, box_index=i+1)
+                result.append(medical_kit_instance_box_setting.format(fields))
+        return result

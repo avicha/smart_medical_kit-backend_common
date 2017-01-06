@@ -26,7 +26,9 @@ class BaseModel(Model):
             ret = model_dict
         else:
             ret = {}
-            for k in fields.split(','):
+            if type(fields) == str:
+                fields = fields.split(',')
+            for k in fields:
                 if k in model_dict:
                     v = model_dict[k]
                 else:

@@ -6,9 +6,9 @@ from peewee import *
 class MedicalKitInstanceBoxSetting(BaseModel):
     medical_kit_instance_id = IntegerField()
     box_index = IntegerField()
-    medical_name = CharField()
-    medical_barcode = IntegerField(null=True)
-    schedule_times = CharField()
+    medical_name = CharField(default='')
+    medical_barcode = IntegerField(default=None, null=True)
+    schedule_times = CharField(default='')
     piece_per_time = IntegerField(default=1)
     unit = CharField(default='粒')
     code = '013'
