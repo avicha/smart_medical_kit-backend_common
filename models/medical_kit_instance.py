@@ -27,13 +27,12 @@ class MedicalKitInstance(BaseModel):
         for i in range(0, box_count):
             if len(settings):
                 box_setting = next(setting for setting in settings if setting.get('box_index') == i+1)
-                if box_setting:
-                    box_setting.schedule_times = box_setting.schedule_times.split(',')
-                    result.append(box_setting)
-                else:
+                if not box_setting:
                     medical_kit_instance_box_setting = MedicalKitInstanceBoxSettingModel(medical_kit_instance_id=self.id, box_index=i+1)
-                    result.append(medical_kit_instance_box_setting.format(fields))
+                    box_setting = medical_kit_instance_box_setting.format(fields)
             else:
                 medical_kit_instance_box_setting = MedicalKitInstanceBoxSettingModel(medical_kit_instance_id=self.id, box_index=i+1)
-                result.append(medical_kit_instance_box_setting.format(fields))
+                box_setting = medical_kit_instance_box_setting.format(fields)
+            box_setting['schedule_times'] = box_setting.get('schedule_times').split(',') if box_setting.get('schedule_times') else []
+            result.append(box_setting)
         return result
