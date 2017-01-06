@@ -54,12 +54,13 @@ class MedicalAPI(object):
                     medical_info.update({'barcode': barcode, 'extra': json.dumps(extra)})
                     return medical_info
                 else:
-                    raise MedicalAPIError(400, '抱歉，找不到该药品的信息')
+                    raise MedicalAPIError(400, '抱歉，找不到该药品的基本信息')
             else:
                 raise MedicalAPIError(status, extra)
         else:
+            print data
             # HTTP请求错误
-            raise MedicalAPIError(response.status, data)
+            raise MedicalAPIError(response.status, '抱歉，服务出了些小问题，请稍后重试')
 
     @classmethod
     def __crawl_ypk39(self, drug_id):
@@ -152,5 +153,6 @@ class MedicalAPI(object):
                 'props': props
             }
         else:
+            print data
             # HTTP请求错误
-            raise MedicalAPIError(response.status, data)
+            raise MedicalAPIError(response.status, '抱歉，找不到该药品的详细信息')
