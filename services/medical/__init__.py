@@ -48,12 +48,15 @@ class MedicalAPI(object):
             ret = json.loads(data)
             status = ret.get('status')
             extra = ret.get('results')
-            if status == 'Ok' and 'DrugId' in extra:
-                medical_info = self.__crawl_ypk39(extra.get('DrugId'))
-                medical_info.update({'barcode': barcode, 'extra': json.dumps(extra)})
-                return medical_info
+            if status == 'Ok':
+                if 'DrugId' in extra:
+                    medical_info = self.__crawl_ypk39(extra.get('DrugId'))
+                    medical_info.update({'barcode': barcode, 'extra': json.dumps(extra)})
+                    return medical_info
+                else:
+                    raise MedicalAPIError(400, '抱歉，找不到该药品的信息')
             else:
-                raise MedicalAPIError(status, results)
+                raise MedicalAPIError(status, extra)
         else:
             # HTTP请求错误
             raise MedicalAPIError(response.status, data)

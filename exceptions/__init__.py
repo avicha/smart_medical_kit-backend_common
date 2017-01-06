@@ -1,5 +1,6 @@
 # coding=utf-8
 from base_error import BaseError
+from backend_common.services.medical import MedicalAPIError
 
 
 def uncaught_error_handler(e):
@@ -11,7 +12,7 @@ def uncaught_error_handler(e):
 
 
 def init_app(server):
-    exceptions = [BaseError]
+    exceptions = [BaseError, MedicalAPIError]
     for e in exceptions:
         server.register_error_handler(e, e.handle)
     server.register_error_handler(Exception, uncaught_error_handler)
