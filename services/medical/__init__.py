@@ -113,30 +113,29 @@ class MedicalAPI(object):
             for x in functions_doms:
                 functions.append(x.get_text())
             functions = ','.join(functions)
-            functions_desc_doms = soup.select('.ps p:nth-of-type(2)')
-            if len(functions_desc_doms):
-                functions_desc_doms[0].strong.extract()
-                functions_desc = functions_desc_doms[0].get_text().strip('\n ')
-            else:
-                functions_desc = ''
-            constituent_doms = soup.select('.ps p:nth-of-type(1)')
-            if len(constituent_doms):
-                constituent_doms[0].strong.extract()
-                constituent = constituent_doms[0].get_text().strip('\n ')
-            else:
-                constituent = ''
-            amount_desc_doms = soup.select('.ps p:nth-of-type(3)')
-            if len(amount_desc_doms):
-                amount_desc_doms[0].strong.extract()
-                amount_desc = amount_desc_doms[0].get_text().strip('\n ')
-            else:
-                amount_desc = ''
+            doms = soup.select('.ps p')
+            constituent = ''
+            functions_desc = ''
+            amount_desc = ''
+            for x in doms:
+                if x.strong:
+                    strong = x.strong.extract()
+                    strong_text = strong.get_text().strip('\n ')
+                    dom_text = x.get_text().strip('\n ')
+                    if strong_text == u'成  分':
+                        constituent = dom_text
+                    elif strong_text == u'适应症':
+                        functions_desc = dom_text
+                    elif strong_text == u'用法用量':
+                        amount_desc = dom_text
             tips = ''
             props = []
             props_doms = soup.select('.xxs li,.showlis li')
             for x in props_doms:
                 prop_name = x.cite.extract().get_text().strip(u'：')
-                prop_value = x.get_text()
+                if x.script:
+                    x.script.extract()
+                prop_value = x.get_text().strip('\n ')
                 props.append(prop_name + ':' + prop_value)
             props = ';'.join(props)
             return {
