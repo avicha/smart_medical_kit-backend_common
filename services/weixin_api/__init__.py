@@ -126,7 +126,7 @@ class WeixinAPI(object):
         # 关闭连接
         conn.close()
         end = time.time()
-        current_app.logger.info('GET %s%s，耗时%sms', self.file_server_host, url, (end - start)*1000)
+        current_app.logger.info('GET %s%s，耗时%sms', file_server_host, url, (end - start)*1000)
         # HTTP正常返回
         if response.status == 200:
             return data
