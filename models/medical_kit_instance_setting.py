@@ -5,7 +5,7 @@ from peewee import *
 
 class MedicalKitInstanceSetting(BaseModel):
     medical_kit_instance_id = IntegerField()
-    prompt_sound = CharField(default='text:吃药啦')
+    prompt_sound = CharField(default='text 吃药啦')
     code = '012'
 
     class Meta:

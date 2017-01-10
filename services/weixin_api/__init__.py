@@ -108,3 +108,30 @@ class WeixinAPI(object):
         params_str = '&'.join(['%s=%s' % (key.lower(), params[key]) for key in sorted(params)])
         signature = hashlib.sha1(params_str).hexdigest()
         return {'appId': self.appid, 'timestamp': params['timestamp'], 'nonceStr': params['noncestr'], 'signature': signature}
+
+    def get_media(self, media_id):
+        start = time.time()
+        file_server_host = 'file.api.weixin.qq.com'
+        access_token = self.get_access_token()
+        # 建立连接
+        conn = httplib.HTTPConnection(file_server_host)
+        payload = {'access_token': access_token, 'media_id': media_id}
+        # 发送请求
+        url = '/cgi-bin/media/get?' + urllib.urlencode(payload, True)
+        conn.request('GET', url)
+        # 获取返回数据
+        response = conn.getresponse()
+        data = response.read()
+        # 关闭连接
+        conn.close()
+        end = time.time()
+        current_app.logger.info('GET %s%s，耗时%sms', self.file_server_host, url, (end - start)*1000)
+        # HTTP正常返回
+        if response.status == 200:
+            return data
+        else:
+            ret = json.loads(data)
+            errcode = ret.get('errcode')
+            errmsg = ret.get('errmsg')
+            # HTTP请求错误
+            raise WeixinAPIError(errcode, errmsg)
