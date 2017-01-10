@@ -110,6 +110,7 @@ class WeixinAPI(object):
         return {'appId': self.appid, 'timestamp': params['timestamp'], 'nonceStr': params['noncestr'], 'signature': signature}
 
     def get_media(self, media_id):
+        from flask import current_app
         start = time.time()
         file_server_host = 'file.api.weixin.qq.com'
         access_token = self.get_access_token()
